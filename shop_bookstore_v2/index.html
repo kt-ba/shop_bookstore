@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shop_bookstore | 연한 노란빛과 베이지 감성의 큐레이션 서재</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-cream: #FEFAE0;
+      --bg-cream-soft: #FFFDF5;
+      --bg-beige: #FAEDCD;
+      --bg-beige-warm: #F3E2BD;
+      --bg-card: #FFFDF8;
+      --point-amber: #D4A373;
+      --point-terracotta: #BC6C25;
+      --point-terracotta-dark: #9A5519;
+      --point-olive: #606C38;
+      --point-olive-soft: #EEF1E4;
+      --text-dark: #2B211B;
+      --text-muted: #6E5D52;
+      --border-soft: #E6D5B8;
+      --shadow-sm: 0 4px 14px rgba(43, 33, 27, 0.05);
+      --shadow-md: 0 12px 30px rgba(43, 33, 27, 0.09);
+      --shadow-lg: 0 22px 48px rgba(43, 33, 27, 0.14);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, var(--bg-cream) 0%, #FDF6D8 45%, var(--bg-cream) 100%);
+      color: var(--text-dark);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, .serif {
+      font-family: 'Gowun Batang', Georgia, serif;
+    }
+
+    /* Top Announcement Ticker */
+    .top-bar {
+      background: linear-gradient(90deg, var(--point-terracotta-dark), var(--point-terracotta), var(--point-terracotta-dark));
+      color: #FFFDF7;
+      text-align: center;
+      font-size: 0.84rem;
+      padding: 8px 16px;
+      letter-spacing: 0.2px;
+      font-weight: 500;
+    }
+    .top-bar span.pill {
+      background: rgba(254, 250, 224, 0.2);
+      border: 1px solid rgba(254, 250, 224, 0.45);
+      padding: 1px 8px;
+      border-radius: 999px;
+      margin-right: 6px;
+      font-size: 0.76rem;
+    }
+
+    /* Sticky Glass Header */
+    header {
+      background: rgba(254, 250, 224, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-soft);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .logo {
+      font-family: 'Gowun Batang', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--point-terracotta);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-badge {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg-beige);
+      color: var(--text-dark);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--point-amber);
+      letter-spacing: 0.8px;
+    }
+    .search-box {
+      flex: 1;
+      max-width: 420px;
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-soft);
+      border-radius: 999px;
+      padding: 6px 16px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-box:focus-within {
+      border-color: var(--point-terracotta);
+      box-shadow: 0 0 0 3px rgba(188, 108, 37, 0.12);
+    }
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      flex: 1;
+      font-size: 0.92rem;
+      color: var(--text-dark);
+    }
+    .search-box button {
+      border: none;
+      background: var(--bg-beige);
+      color: var(--point-terracotta-dark);
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 9px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--point-amber);
+      background-color: var(--bg-beige);
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover {
+      background-color: var(--point-amber);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--point-terracotta), var(--point-terracotta-dark));
+      color: #fff;
+      border-color: var(--point-terracotta-dark);
+      box-shadow: 0 4px 12px rgba(188, 108, 37, 0.25);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #c9762c, var(--point-terracotta));
+      box-shadow: 0 6px 16px rgba(188, 108, 37, 0.35);
+    }
+    .btn-olive {
+      background-color: var(--point-olive);
+      color: #fff;
+      border-color: var(--point-olive);
+    }
+    .btn-olive:hover { background-color: #4d572c; }
+
+    .member-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--point-amber);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+    .tier-tag {
+      background: var(--point-olive);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    /* 10-Image Hero Showcase */
+    .hero-section {
+      max-width: 1280px;
+      margin: 28px auto 32px;
+      padding: 0 24px;
+    }
+    .hero-slider {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-soft);
+      background: var(--bg-beige);
+      height: 460px;
+    }
+    .slides-track {
+      display: flex;
+      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      height: 100%;
+    }
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .slide-caption {
+      position: absolute;
+      bottom: 28px;
+      left: 34px;
+      background: rgba(255, 253, 247, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 18px 26px;
+      border-radius: 16px;
+      border: 1px solid rgba(212, 163, 115, 0.5);
+      border-left: 6px solid var(--point-terracotta);
+      max-width: 520px;
+      box-shadow: var(--shadow-md);
+    }
+    .slide-caption .tag {
+      display: inline-block;
+      background: var(--bg-beige);
+      color: var(--point-terracotta-dark);
+      border: 1px solid var(--point-amber);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+    .slide-caption h2 {
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+      color: var(--text-dark);
+    }
+    .slide-caption p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 253, 247, 0.9);
+      border: 1px solid var(--point-amber);
+      color: var(--text-dark);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      font-size: 1.35rem;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+    }
+    .slider-btn:hover {
+      background: var(--point-terracotta);
+      color: #fff;
+      transform: translateY(-50%) scale(1.06);
+    }
+    .prev-btn { left: 18px; }
+    .next-btn { right: 18px; }
+
+    .slider-dots {
+      position: absolute;
+      bottom: 18px;
+      right: 26px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(43, 33, 27, 0.55);
+      backdrop-filter: blur(6px);
+      padding: 8px 14px;
+      border-radius: 999px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 253, 247, 0.45);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .dot.active {
+      background: var(--bg-cream);
+      width: 24px;
+      border-radius: 6px;
+    }
+
+    /* Membership Lounge Section */
+    .membership-banner {
+      max-width: 1280px;
+      margin: 0 auto 38px;
+      padding: 0 24px;
+    }
+    .lounge-box {
+      background: linear-gradient(135deg, var(--bg-beige) 0%, var(--bg-beige-warm) 100%);
+      padding: 24px;
+      border-radius: 22px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-sm);
+    }
+    .lounge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .lounge-header h3 { font-size: 1.25rem; color: var(--text-dark); }
+    .lounge-header span { font-size: 0.85rem; color: var(--text-muted); }
+
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+    .tier-card {
+      background: var(--bg-card);
+      padding: 18px 20px;
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      border-top: 4px solid var(--point-amber);
+      transition: transform 0.2s;
+    }
+    .tier-card:hover { transform: translateY(-3px); }
+    .tier-card.vip { border-top-color: var(--point-terracotta); }
+    .tier-card h4 {
+      font-size: 0.98rem;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tier-rate {
+      background: var(--bg-beige);
+      color: var(--point-terracotta-dark);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .tier-card p { font-size: 0.83rem; color: var(--text-muted); }
+
+    /* Main Store Catalog */
+    .store-section {
+      max-width: 1280px;
+      margin: 0 auto 72px;
+      padding: 0 24px;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+      border-bottom: 2px solid var(--bg-beige-warm);
+      padding-bottom: 16px;
+    }
+    .section-title-group h2 { font-size: 1.65rem; margin-bottom: 4px; }
+    .section-title-group p { font-size: 0.9rem; color: var(--text-muted); }
+
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 9px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { border-color: var(--point-amber); background: var(--bg-beige); }
+    .tab-btn.active {
+      background: var(--point-terracotta);
+      color: #fff;
+      border-color: var(--point-terracotta);
+      box-shadow: 0 4px 12px rgba(188, 108, 37, 0.25);
+    }
+
+    /* Product Cards */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+      gap: 26px;
+    }
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover {
+      transform: translateY(-7px);
+      box-shadow: var(--shadow-md);
+    }
+    .product-img-wrap {
+      position: relative;
+      height: 270px;
+      background: var(--bg-beige);
+      overflow: hidden;
+    }
+    .product-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+    .product-card:hover .product-img-wrap img {
+      transform: scale(1.05);
+    }
+    .badge-type {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      padding: 4px 11px;
+      border-radius: 8px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .type-paper { background: var(--bg-cream); color: var(--point-terracotta-dark); border: 1px solid var(--point-amber); }
+    .type-ebook { background: var(--point-olive); color: #fff; }
+    .type-stationery { background: var(--point-terracotta); color: #fff; }
+
+    .badge-shipping {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(255, 253, 247, 0.95);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .ship-instant { color: var(--point-olive); border: 1px solid var(--point-olive); }
+    .ship-parcel { color: var(--text-muted); border: 1px solid var(--point-amber); }
+
+    .product-body {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-author { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+    .product-title {
+      font-family: 'Gowun Batang', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-dark);
+    }
+    .product-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+    .product-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border-soft);
+    }
+    .price { font-size: 1.2rem; font-weight: 800; color: var(--point-terracotta-dark); }
+    .point-earn { font-size: 0.76rem; color: var(--point-olive); font-weight: 700; margin-bottom: 6px; }
+
+    /* Modals */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(43, 33, 27, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-backdrop.open { display: flex; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal {
+      background: var(--bg-cream);
+      border: 1.5px solid var(--point-amber);
+      border-radius: 22px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+    .modal-header h3 { font-size: 1.3rem; }
+    .close-btn {
+      background: var(--bg-beige);
+      border: 1px solid var(--border-soft);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.84rem; font-weight: 700; margin-bottom: 5px; }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--point-amber);
+      border-radius: 10px;
+      background: var(--bg-card);
+      font-size: 0.94rem;
+      color: var(--text-dark);
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      margin-bottom: 10px;
+    }
+    .summary-box {
+      background: var(--bg-beige);
+      padding: 18px;
+      border-radius: 16px;
+      margin-top: 14px;
+      border: 1px solid var(--border-soft);
+      font-size: 0.92rem;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .summary-total {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--point-terracotta-dark);
+      border-top: 1.5px solid var(--point-amber);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+    .ebook-shelf-item {
+      background: var(--point-olive-soft);
+      border: 1px solid var(--point-olive);
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    footer {
+      background: linear-gradient(180deg, var(--bg-beige) 0%, var(--bg-beige-warm) 100%);
+      border-top: 1px solid var(--border-soft);
+      padding: 44px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    footer .footer-brand {
+      font-family: 'Gowun Batang', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--point-terracotta);
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-slider { height: 340px; }
+      .slide-caption { left: 16px; right: 16px; bottom: 48px; padding: 14px 18px; }
+      .slide-caption h2 { font-size: 1.12rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span class="pill">MEMBER BENEFIT</span> 신규 회원가입 시 즉시 사용 가능한 <strong>3,000P</strong> 지급 · 전자책(E-Book)은 배송비 0원 & 결제 즉시 열람
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">shop_bookstore <span class="logo-badge">ATELIER</span></a>
+      
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="도서명, 저자, 감성 문구류를 검색해보세요..." onkeyup="renderProducts()" />
+        <button onclick="renderProducts()">검색</button>
+      </div>
+
+      <div class="user-actions">
+        <div id="userStatusArea"></div>
+        <button class="btn" onclick="openModal('libraryModal')">📖 내 서재 (<span id="orderCount">0</span>)</button>
+        <button class="btn btn-primary" onclick="openModal('cartModal')">🛒 장바구니 (<span id="cartCount">0</span>)</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 10-Image Rotating Hero Showcase -->
+  <section class="hero-section">
+    <div class="hero-slider" id="heroSlider">
+      <div class="slides-track" id="slidesTrack"></div>
+      <button class="slider-btn prev-btn" onclick="moveSlide(-1)" aria-label="이전 슬라이드">‹</button>
+      <button class="slider-btn next-btn" onclick="moveSlide(1)" aria-label="다음 슬라이드">›</button>
+      <div class="slider-dots" id="sliderDots"></div>
+    </div>
+  </section>
+
+  <!-- Membership Tier & Point System Guide -->
+  <section class="membership-banner">
+    <div class="lounge-box">
+      <div class="lounge-header">
+        <h3>✨ shop_bookstore 멤버십 & 포인트 리워드</h3>
+        <span>누적 구매액에 따라 등급이 자동 승급되며, 적립 포인트는 1P = 1원으로 즉시 사용 가능합니다.</span>
+      </div>
+      <div class="tier-grid">
+        <div class="tier-card">
+          <h4>🌱 새싹 독자 (신규) <span class="tier-rate">2% 적립</span></h4>
+          <p>가입 즉시 3,000P 지급 · 누적 0원 이상</p>
+        </div>
+        <div class="tier-card">
+          <h4>🌿 단골 서재 (SILVER) <span class="tier-rate">5% 적립</span></h4>
+          <p>전 상품 무료배송 혜택 · 누적 50,000원 이상</p>
+        </div>
+        <div class="tier-card vip">
+          <h4>🍂 깊은 사색 (GOLD) <span class="tier-rate">8% 적립 · 3% 할인</span></h4>
+          <p>상시 3% 추가 할인 · 누적 150,000원 이상</p>
+        </div>
+        <div class="tier-card vip">
+          <h4>👑 마스터 북러버 (VIP) <span class="tier-rate">10% 적립 · 5% 할인</span></h4>
+          <p>최고 우대 5% 할인 & 10% 적립 · 누적 300,000원 이상</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Product Catalog -->
+  <main class="store-section">
+    <div class="section-header">
+      <div class="section-title-group">
+        <h2>📚 큐레이션 도서 & 아뜰리에 문구</h2>
+        <p>종이책의 따뜻한 질감부터 결제 즉시 펼쳐보는 전자책, 독서를 돕는 문구까지 한곳에서 만나보세요.</p>
+      </div>
+      <div class="category-tabs">
+        <button class="tab-btn active" onclick="filterCategory('ALL', this)">전체보기 (12)</button>
+        <button class="tab-btn" onclick="filterCategory('PAPER', this)">종이책</button>
+        <button class="tab-btn" onclick="filterCategory('EBOOK', this)">전자책 (무배송·즉시열람)</button>
+        <button class="tab-btn" onclick="filterCategory('STATIONERY', this)">독서 문구류</button>
+      </div>
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+  </main>
+
+  <!-- Auth Modal -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>🌿 멤버십 회원가입 / 로그인</h3>
+        <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
+      </div>
+      <div class="form-group">
+        <label>독자 이름 (닉네임)</label>
+        <input type="text" id="regName" placeholder="예: 김서재" />
+      </div>
+      <div class="form-group">
+        <label>이메일 주소</label>
+        <input type="email" id="regEmail" placeholder="reader@shopbookstore.kr" />
+      </div>
+      <div class="form-group">
+        <label>비밀번호</label>
+        <input type="password" id="regPw" placeholder="비밀번호를 입력하세요" />
+      </div>
+      <div style="background:var(--point-olive-soft); padding:12px 14px; border-radius:10px; font-size:0.83rem; color:var(--point-olive); margin-bottom:16px;">
+        🎁 <strong>가입 축하 혜택:</strong> <strong>새싹 독자</strong> 등급 부여와 함께 첫 구매부터 바로 쓸 수 있는 <strong>3,000 포인트</strong>가 즉시 적립됩니다.
+      </div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;" onclick="handleRegister()">가입하고 3,000P 즉시 받기</button>
+    </div>
+  </div>
+
+  <!-- Cart & Checkout Modal -->
+  <div class="modal-backdrop" id="cartModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>🛒 장바구니 & 스마트 결제</h3>
+        <button class="close-btn" onclick="closeModal('cartModal')">&times;</button>
+      </div>
+      <div id="cartItemsList"></div>
+
+      <div class="summary-box" id="checkoutBox">
+        <div class="summary-row">
+          <span>상품 총액</span>
+          <span id="subtotalText">0원</span>
+        </div>
+        <div class="summary-row">
+          <span>배송비 <small id="shippingNote" style="color:var(--point-olive); font-weight:600;"></small></span>
+          <span id="shippingText">0원</span>
+        </div>
+        <div class="summary-row">
+          <span>등급 우대 할인 (<span id="userTierDiscountLabel">0%</span>)</span>
+          <span id="discountText" style="color:var(--point-olive); font-weight:700;">-0원</span>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label>포인트 차감 사용 (보유: <span id="availPoints">0</span>P)</label>
+          <div style="display:flex; gap:8px;">
+            <input type="number" id="usePointsInput" value="0" min="0" onchange="updateCartSummary()" />
+            <button class="btn" style="white-space:nowrap;" onclick="useAllPoints()">전액사용</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>결제 수단 선택</label>
+          <select id="payMethod">
+            <option value="CARD">신용/체크카드 간편결제</option>
+            <option value="KAKAO">카카오페이 / 네이버페이 / 토스페이</option>
+            <option value="BANK">실시간 계좌이체</option>
+          </select>
+        </div>
+        <div class="form-group" id="addressGroup">
+          <label>배송지 주소 (종이책·문구류 배송용)</label>
+          <input type="text" id="shippingAddress" placeholder="도로명 주소를 입력하세요" value="서울시 종로구 삼청로 책방길 101" />
+        </div>
+        <div class="summary-row summary-total">
+          <span>최종 결제 금액</span>
+          <span id="finalTotalText">0원</span>
+        </div>
+        <p style="font-size:0.82rem; color:var(--point-olive); margin-top:6px;">
+          ✨ 결제 완료 시 적립 예정 포인트: <strong id="expectedPointsText">0P</strong>
+        </p>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; margin-top:14px; padding:13px; font-size:0.98rem;" onclick="processPayment()">안전 결제하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Library & Orders Modal -->
+  <div class="modal-backdrop" id="libraryModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📖 내 서재 (즉시 열람 전자책) & 주문내역</h3>
+        <button class="close-btn" onclick="closeModal('libraryModal')">&times;</button>
+      </div>
+      <div>
+        <h4 style="margin-bottom:10px; color:var(--point-olive);">⚡ 배송 없이 결제 즉시 읽는 디지털 서재</h4>
+        <div id="ebookList"></div>
+      </div>
+      <hr style="border:none; border-top:1px solid var(--border-soft); margin:18px 0;" />
+      <div>
+        <h4 style="margin-bottom:10px;">📦 최근 주문 및 배송 현황</h4>
+        <div id="orderHistoryList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- E-Book Instant Reader Modal -->
+  <div class="modal-backdrop" id="readerModal">
+    <div class="modal" style="max-width:680px;">
+      <div class="modal-header">
+        <h3 id="readerTitle">전자책 뷰어</h3>
+        <button class="close-btn" onclick="closeModal('readerModal')">&times;</button>
+      </div>
+      <div style="background:#FFFDF8; padding:28px; border-radius:16px; border:1px solid var(--border-soft); min-height:260px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.03);">
+        <div style="display:inline-block; background:var(--point-olive-soft); color:var(--point-olive); font-size:0.78rem; font-weight:700; padding:4px 10px; border-radius:6px; margin-bottom:14px;">
+          ⚡ INSTANT CLOUD READER · 결제 즉시 스트리밍 열람
+        </div>
+        <div id="readerContent" class="serif" style="font-size:1.08rem; line-height:1.95; color:var(--text-dark);"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">shop_bookstore</div>
+    <p>연한 노란빛과 베이지 감성이 머무는 온·오프라인 큐레이션 서점</p>
+    <p style="margin-top:6px; font-size:0.82rem;">고객센터: 1588-0000 | 이메일: hello@shopbookstore.kr | 사업자등록번호: 123-45-67890</p>
+  </footer>
+
+  <script>
+    const heroSlides = [
+      { img: 'img/hero1.png', tag: 'SEASON FESTIVAL', title: '가을의 문턱, 따뜻한 베이지빛 독서 축제', desc: '베스트셀러 종이책 최대 20% 할인 및 멤버십 포인트 2배 적립' },
+      { img: 'img/hero2.png', tag: 'INSTANT E-BOOK', title: '기다림 없는 독서, 전자책 결제 즉시 열람', desc: '배송비 0원! 결제와 동시에 내 서재 클라우드 뷰어에서 바로 펼쳐보세요' },
+      { img: 'img/hero3.png', tag: 'MORNING ESSAY', title: '아침 커피 한 잔과 어울리는 에세이 컬렉션', desc: '마음을 채우는 따뜻한 문장들로 하루의 첫 페이지를 열어보세요' },
+      { img: 'img/hero4.png', tag: 'ATELIER STATIONERY', title: '독서의 깊이를 더하는 감성 문구 셀렉션', desc: '앤틱 황동 북마크, 린넨 양장 독서노트, 클래식 원목 만년필 입고' },
+      { img: 'img/hero5.png', tag: 'MEMBERSHIP LOUNGE', title: '회원 등급별 최대 10% 포인트 적립 혜택', desc: '새싹 독자부터 VIP 북러버까지, 읽을수록 풍성해지는 서재 리워드' },
+      { img: 'img/hero6.png', tag: 'HUMANITIES & PHILOSOPHY', title: '시대를 초월한 인문·철학 하드커버 특별전', desc: '오래도록 책장에 꽂아두고 싶은 양장본 컬렉션 단독 큐레이션' },
+      { img: 'img/hero7.png', tag: 'DIGITAL LIBRARY', title: '내 주머니 속의 작은 서재, 디지털 클래식', desc: '언제 어디서나 가볍게 꺼내 읽는 고화질 타이포그래피 전자책' },
+      { img: 'img/hero8.png', tag: 'ART & ARCHITECTURE', title: '창작자를 위한 아트 & 공간 건축 아카이브', desc: '빛과 여백의 미학을 담은 감각적인 화보 및 디자인 도서 모음' },
+      { img: 'img/hero9.png', tag: 'SCIENCE & FUTURE', title: '2026 미래 기술과 우주 과학 트렌드', desc: '인공지능과 우주 탐사의 최전선을 다루는 핵심 교양 과학서' },
+      { img: 'img/hero10.png', tag: 'GIFT EDITION', title: '3만원 이상 구매 시 보태니컬 책갈피 증정', desc: '소중한 사람에게 책 한 권의 온기와 마음을 선물하세요' }
+    ];
+
+    const products = [
+      { id: 1, category: 'PAPER', title: '아침 커피와 에세이', author: '김다정 저', price: 16500, img: 'img/prod1.png', desc: '창가로 스미는 햇살 아래 읽기 좋은 일상 산문집 (양장 종이책)' },
+      { id: 2, category: 'PAPER', title: '식물원의 사계절 산책', author: '이초록 저', price: 22000, img: 'img/prod2.png', desc: '섬세한 식물 세밀화와 계절의 기록이 담긴 하드커버 도감' },
+      { id: 3, category: 'PAPER', title: '빛과 공간의 건축학', author: '박구조 저', price: 28000, img: 'img/prod3.png', desc: '따뜻한 베이지 톤 건축물이 주는 사색과 평온함에 대하여' },
+      { id: 4, category: 'PAPER', title: '한밤중의 베이커리', author: '최밀가루 저', price: 15800, img: 'img/prod4.png', desc: '고소한 버터와 빵 냄새가 퍼지는 심야 힐링 장편소설' },
+      { id: 5, category: 'EBOOK', title: '디지털 미니멀리즘 2026', author: '정단순 저', price: 12000, img: 'img/prod5.png', desc: '소음을 걷어내고 본질에 집중하는 디지털 시대의 사색법', sample: '제1장. 소음을 줄이고 본질에 집중하기 — 우리는 매일 수천 개의 알림 속에서 살아갑니다. 진정한 사색은 화면 밖의 고요함을 허락할 때 비로소 시작됩니다. 오늘 하루 중 단 30분만이라도 오직 한 권의 책과 마주해보세요.' },
+      { id: 6, category: 'EBOOK', title: '별빛 소나타 (전자책 단독)', author: '한은하 저', price: 9800, img: 'img/prod6.png', desc: '오래된 피아노 선율로 이어지는 두 사람의 서정 로맨스', sample: '프롤로그. 오래된 업라이트 피아노의 건반 덮개를 열자, 햇빛에 부유하는 먼지 사이로 은은한 선율이 흘러나왔다. 10년 전 그날 밤의 기억은 여전히 촛불처럼 선명했다.' },
+      { id: 7, category: 'EBOOK', title: '실전 데이터와 파이썬 크래프트', author: '오코딩 저', price: 19000, img: 'img/prod7.png', desc: '견고한 데이터 아키텍처와 우아한 코드 설계 실무 가이드', sample: 'Chapter 1. 깔끔한 데이터 파이프라인 설계 — 잘 다듬어진 코드는 읽기 쉬운 한 편의 산문과 같습니다. 복잡한 비즈니스 로직을 명확한 함수와 테스트로 분리하는 원칙을 다룹니다.' },
+      { id: 8, category: 'EBOOK', title: '매일 읽는 스토아 철학 노트', author: '유지혜 저', price: 11000, img: 'img/prod8.png', desc: '흔들리는 마음을 단단하게 붙잡아주는 365일 철학 명상집', sample: '오늘의 명상. 우리가 통제할 수 있는 것과 통제할 수 없는 것을 지혜롭게 구분할 때, 외부의 어떤 폭풍우 속에서도 내면의 서재는 평온을 유지합니다.' },
+      { id: 9, category: 'STATIONERY', title: '베이지 린넨 양장 독서노트', author: 'shop_bookstore 아뜰리에', price: 14000, img: 'img/prod9.png', desc: '만년필 잉크 번짐 없는 120g 고급 미색 모조지 192페이지' },
+      { id: 10, category: 'STATIONERY', title: '앤틱 황동 북마크 세트 (3종)', author: 'shop_bookstore 아뜰리에', price: 9500, img: 'img/prod10.png', desc: '시간이 흐를수록 깊고 은은한 광택이 더해지는 순수 황동 책갈피' },
+      { id: 11, category: 'STATIONERY', title: '클래식 우드 만년필 (EF촉)', author: '아뜰리에 펜', price: 34000, img: 'img/prod11.png', desc: '따뜻한 천연 원목 바디와 부드러운 필기감의 필사용 만년필' },
+      { id: 12, category: 'STATIONERY', title: '원목 각도조절 독서대', author: '우드크래프트', price: 29000, img: 'img/prod12.png', desc: '두꺼운 양장본도 안정적으로 받쳐주는 인체공학 오크 원목 독서대' }
+    ];
+
+    let currentUser = JSON.parse(localStorage.getItem('sb_user')) || null;
+    let cart = JSON.parse(localStorage.getItem('sb_cart')) || [];
+    let orders = JSON.parse(localStorage.getItem('sb_orders')) || [];
+    let currentCategory = 'ALL';
+    let currentSlide = 0;
+
+    function getTierInfo(totalSpent) {
+      if (totalSpent >= 300000) return { name: 'VIP 마스터', rate: 0.10, discount: 0.05 };
+      if (totalSpent >= 150000) return { name: 'GOLD 사색', rate: 0.08, discount: 0.03 };
+      if (totalSpent >= 50000) return { name: 'SILVER 단골', rate: 0.05, discount: 0.00 };
+      return { name: '새싹 독자', rate: 0.02, discount: 0.00 };
+    }
+
+    function initSlider() {
+      const track = document.getElementById('slidesTrack');
+      const dots = document.getElementById('sliderDots');
+      track.innerHTML = heroSlides.map((s, idx) => `
+        <div class="slide">
+          <img src="${s.img}" alt="${s.title}" />
+          <div class="slide-caption">
+            <span class="tag">${s.tag} · ${idx + 1} / 10</span>
+            <h2>${s.title}</h2>
+            <p>${s.desc}</p>
+          </div>
+        </div>
+      `).join('');
+
+      dots.innerHTML = heroSlides.map((_, idx) => `
+        <div class="dot ${idx === 0 ? 'active' : ''}" onclick="goToSlide(${idx})"></div>
+      `).join('');
+
+      setInterval(() => moveSlide(1), 4500);
+    }
+
+    function moveSlide(step) {
+      currentSlide = (currentSlide + step + heroSlides.length) % heroSlides.length;
+      updateSliderUI();
+    }
+
+    function goToSlide(idx) {
+      currentSlide = idx;
+      updateSliderUI();
+    }
+
+    function updateSliderUI() {
+      document.getElementById('slidesTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
+      document.querySelectorAll('.dot').forEach((d, idx) => {
+        d.classList.toggle('active', idx === currentSlide);
+      });
+    }
+
+    function filterCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+      const grid = document.getElementById('productGrid');
+      const filtered = products.filter(p => {
+        const matchCat = currentCategory === 'ALL' || p.category === currentCategory;
+        const matchKey = p.title.toLowerCase().includes(keyword) || p.author.toLowerCase().includes(keyword) || p.desc.toLowerCase().includes(keyword);
+        return matchCat && matchKey;
+      });
+
+      const rate = currentUser ? getTierInfo(currentUser.totalSpent).rate : 0.02;
+
+      grid.innerHTML = filtered.map(p => {
+        const badgeClass = p.category === 'PAPER' ? 'type-paper' : (p.category === 'EBOOK' ? 'type-ebook' : 'type-stationery');
+        const badgeLabel = p.category === 'PAPER' ? '종이책' : (p.category === 'EBOOK' ? '전자책' : '문구류');
+        const shipBadge = p.category === 'EBOOK'
+          ? '<span class="badge-shipping ship-instant">⚡ 배송없음 · 결제즉시사용</span>'
+          : '<span class="badge-shipping ship-parcel">📦 안전 택배배송</span>';
+        const earnPts = Math.floor(p.price * rate);
+
+        return `
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <img src="${p.img}" alt="${p.title}" />
+              <span class="badge-type ${badgeClass}">${badgeLabel}</span>
+              ${shipBadge}
+            </div>
+            <div class="product-body">
+              <div>
+                <div class="product-author">${p.author}</div>
+                <div class="product-title">${p.title}</div>
+                <div class="product-desc">${p.desc}</div>
+              </div>
+              <div>
+                <div class="point-earn">+${earnPts.toLocaleString()}P 적립 예정</div>
+                <div class="product-price-row">
+                  <span class="price">${p.price.toLocaleString()}원</span>
+                  <button class="btn btn-primary" onclick="addToCart(${p.id})">장바구니 담기</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateUserUI() {
+      const area = document.getElementById('userStatusArea');
+      if (!currentUser) {
+        area.innerHTML = `<button class="btn" onclick="openModal('authModal')">🌿 회원가입 / 로그인</button>`;
+      } else {
+        const tier = getTierInfo(currentUser.totalSpent);
+        area.innerHTML = `
+          <div class="member-badge">
+            <span class="tier-tag">${tier.name}</span>
+            <span>${currentUser.name}님</span>
+            <span style="color:var(--point-terracotta-dark);">${currentUser.points.toLocaleString()}P</span>
+            <button onclick="logout()" style="border:none;background:none;color:var(--text-muted);cursor:pointer;font-size:0.75rem;margin-left:2px;">로그아웃</button>
+          </div>
+        `;
+      }
+      document.getElementById('cartCount').innerText = cart.reduce((acc, item) => acc + item.qty, 0);
+      document.getElementById('orderCount').innerText = orders.length;
+    }
+
+    function handleRegister() {
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      if (!name || !email) {
+        alert('이름과 이메일을 입력해주세요.');
+        return;
+      }
+      currentUser = { name, email, points: 3000, totalSpent: 0 };
+      localStorage.setItem('sb_user', JSON.stringify(currentUser));
+      closeModal('authModal');
+      updateUserUI();
+      renderProducts();
+      alert(`환영합니다, ${name}님! 신규 회원가입 축하 3,000 포인트가 지급되었습니다.`);
+    }
+
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('sb_user');
+      updateUserUI();
+      renderProducts();
+    }
+
+    function addToCart(id) {
+      const existing = cart.find(c => c.id === id);
+      if (existing) existing.qty += 1;
+      else cart.push({ id, qty: 1 });
+      localStorage.setItem('sb_cart', JSON.stringify(cart));
+      updateUserUI();
+      alert('장바구니에 상품을 담았습니다.');
+    }
+
+    function changeQty(id, delta) {
+      const idx = cart.findIndex(c => c.id === id);
+      if (idx === -1) return;
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      localStorage.setItem('sb_cart', JSON.stringify(cart));
+      updateUserUI();
+      renderCart();
+    }
+
+    function renderCart() {
+      const list = document.getElementById('cartItemsList');
+      if (cart.length === 0) {
+        list.innerHTML = `<p style="text-align:center; padding:28px; color:var(--text-muted);">장바구니가 비어 있습니다. 마음에 드는 책과 문구를 담아보세요.</p>`;
+        document.getElementById('checkoutBox').style.display = 'none';
+        return;
+      }
+      document.getElementById('checkoutBox').style.display = 'block';
+
+      list.innerHTML = cart.map(item => {
+        const p = products.find(prod => prod.id === item.id);
+        const typeTag = p.category === 'EBOOK' ? '⚡전자책(무배송·즉시사용)' : (p.category === 'PAPER' ? '📖종이책' : '✒️문구');
+        return `
+          <div class="cart-item">
+            <div>
+              <strong>${p.title}</strong> <small style="color:var(--point-olive); font-weight:700;">[${typeTag}]</small><br/>
+              <span style="font-size:0.84rem; color:var(--text-muted);">${p.price.toLocaleString()}원 × ${item.qty}개</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button class="btn" style="padding:3px 9px;" onclick="changeQty(${p.id}, -1)">-</button>
+              <span style="min-width:18px; text-align:center; font-weight:700;">${item.qty}</span>
+              <button class="btn" style="padding:3px 9px;" onclick="changeQty(${p.id}, 1)">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      updateCartSummary();
+    }
+
+    function useAllPoints() {
+      if (!currentUser) return alert('로그인 후 포인트를 사용할 수 있습니다.');
+      document.getElementById('usePointsInput').value = currentUser.points;
+      updateCartSummary();
+    }
+
+    function updateCartSummary() {
+      let subtotal = 0;
+      let hasPhysicalItem = false;
+
+      cart.forEach(item => {
+        const p = products.find(prod => prod.id === item.id);
+        subtotal += p.price * item.qty;
+        if (p.category !== 'EBOOK') hasPhysicalItem = true;
+      });
+
+      const tier = currentUser ? getTierInfo(currentUser.totalSpent) : { name: '비회원', rate: 0, discount: 0 };
+      const discount = Math.floor(subtotal * tier.discount);
+
+      let shipping = 0;
+      let shipNote = '(전자책 전용 · 배송없음)';
+      if (hasPhysicalItem) {
+        if (subtotal >= 30000 || (currentUser && currentUser.totalSpent >= 50000)) {
+          shipping = 0;
+          shipNote = '(무료배송 혜택 적용)';
+        } else {
+          shipping = 3000;
+          shipNote = '(3만원 이상 무료배송)';
+        }
+      }
+
+      document.getElementById('addressGroup').style.display = hasPhysicalItem ? 'block' : 'none';
+
+      const availPts = currentUser ? currentUser.points : 0;
+      document.getElementById('availPoints').innerText = availPts.toLocaleString();
+
+      let usePts = parseInt(document.getElementById('usePointsInput').value) || 0;
+      if (usePts > availPts) { usePts = availPts; document.getElementById('usePointsInput').value = usePts; }
+      if (usePts > subtotal - discount) { usePts = Math.max(0, subtotal - discount); document.getElementById('usePointsInput').value = usePts; }
+
+      const finalTotal = Math.max(0, subtotal - discount + shipping - usePts);
+      const expectedPts = currentUser ? Math.floor((subtotal - discount) * tier.rate) : 0;
+
+      document.getElementById('subtotalText').innerText = subtotal.toLocaleString() + '원';
+      document.getElementById('shippingNote').innerText = shipNote;
+      document.getElementById('shippingText').innerText = shipping.toLocaleString() + '원';
+      document.getElementById('userTierDiscountLabel').innerText = `${tier.name} ${(tier.discount*100)}%`;
+      document.getElementById('discountText').innerText = '-' + discount.toLocaleString() + '원';
+      document.getElementById('finalTotalText').innerText = finalTotal.toLocaleString() + '원';
+      document.getElementById('expectedPointsText').innerText = expectedPts.toLocaleString() + 'P';
+    }
+
+    function processPayment() {
+      if (!currentUser) {
+        alert('결제 및 포인트 적립을 위해 먼저 회원가입/로그인을 진행해주세요!');
+        closeModal('cartModal');
+        openModal('authModal');
+        return;
+      }
+      if (cart.length === 0) return;
+
+      let subtotal = 0;
+      let hasPhysical = false;
+      const purchasedItems = cart.map(item => {
+        const p = products.find(prod => prod.id === item.id);
+        subtotal += p.price * item.qty;
+        if (p.category !== 'EBOOK') hasPhysical = true;
+        return { ...p, qty: item.qty };
+      });
+
+      const tier = getTierInfo(currentUser.totalSpent);
+      const discount = Math.floor(subtotal * tier.discount);
+      const usePts = parseInt(document.getElementById('usePointsInput').value) || 0;
+      const shipping = (hasPhysical && subtotal < 30000 && currentUser.totalSpent < 50000) ? 3000 : 0;
+      const finalPaid = Math.max(0, subtotal - discount + shipping - usePts);
+      const earnedPts = Math.floor((subtotal - discount) * tier.rate);
+
+      currentUser.points = currentUser.points - usePts + earnedPts;
+      currentUser.totalSpent += finalPaid;
+      localStorage.setItem('sb_user', JSON.stringify(currentUser));
+
+      const newTier = getTierInfo(currentUser.totalSpent);
+      const orderRecord = {
+        orderId: 'ORD-' + Date.now().toString().slice(-6),
+        date: new Date().toLocaleString(),
+        items: purchasedItems,
+        totalPaid: finalPaid,
+        earnedPts,
+        status: hasPhysical ? '배송 준비중 (전자책은 즉시 열람 가능)' : '결제완료 · 배송없음(즉시사용)'
+      };
+
+      orders.unshift(orderRecord);
+      localStorage.setItem('sb_orders', JSON.stringify(orders));
+
+      cart = [];
+      localStorage.setItem('sb_cart', JSON.stringify(cart));
+      document.getElementById('usePointsInput').value = 0;
+
+      closeModal('cartModal');
+      updateUserUI();
+      renderProducts();
+
+      alert(`결제가 완료되었습니다!
+- 최종 결제액: ${finalPaid.toLocaleString()}원
+- 적립 포인트: +${earnedPts.toLocaleString()}P
+- 현재 회원등급: ${newTier.name}
+
+전자책은 '내 서재'에서 배송 없이 바로 읽으실 수 있습니다.`);
+      openModal('libraryModal');
+    }
+
+    function renderLibraryAndOrders() {
+      const ebookList = document.getElementById('ebookList');
+      const orderList = document.getElementById('orderHistoryList');
+
+      const ownedEbooks = [];
+      orders.forEach(o => {
+        o.items.forEach(item => {
+          if (item.category === 'EBOOK' && !ownedEbooks.find(e => e.id === item.id)) {
+            ownedEbooks.push(item);
+          }
+        });
+      });
+
+      if (ownedEbooks.length === 0) {
+        ebookList.innerHTML = `<p style="font-size:0.84rem; color:var(--text-muted); padding:10px 0;">보유 중인 전자책이 없습니다. 전자책을 구매하시면 배송 없이 이곳에서 즉시 열람할 수 있습니다.</p>`;
+      } else {
+        ebookList.innerHTML = ownedEbooks.map(eb => `
+          <div class="ebook-shelf-item">
+            <div>
+              <strong>${eb.title}</strong> <span style="font-size:0.8rem; color:var(--text-muted);">(${eb.author})</span><br/>
+              <small style="color:var(--point-olive);">결제 완료 · 클라우드 즉시 사용 가능</small>
+            </div>
+            <button class="btn btn-olive" style="padding:7px 14px; font-size:0.82rem;" onclick="openEbookReader(${eb.id})">바로 읽기</button>
+          </div>
+        `).join('');
+      }
+
+      if (orders.length === 0) {
+        orderList.innerHTML = `<p style="font-size:0.84rem; color:var(--text-muted); padding:10px 0;">아직 주문 내역이 없습니다.</p>`;
+      } else {
+        orderList.innerHTML = orders.map(o => `
+          <div class="cart-item" style="flex-direction:column; align-items:flex-start; gap:5px;">
+            <div style="display:flex; justify-content:space-between; width:100%;">
+              <strong>주문번호 ${o.orderId}</strong>
+              <span style="font-size:0.8rem; color:var(--point-terracotta-dark); font-weight:700;">${o.status}</span>
+            </div>
+            <div style="font-size:0.86rem;">${o.items.map(i => `${i.title} (${i.qty}개)`).join(', ')}</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">결제일시: ${o.date} | 결제금액: ${o.totalPaid.toLocaleString()}원 (+${o.earnedPts.toLocaleString()}P 적립)</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function openEbookReader(id) {
+      const book = products.find(p => p.id === id);
+      if (!book) return;
+      document.getElementById('readerTitle').innerText = `📖 ${book.title} - ${book.author}`;
+      document.getElementById('readerContent').innerText = book.sample || '전자책 본문이 로드되었습니다.';
+      openModal('readerModal');
+    }
+
+    function openModal(id) {
+      if (id === 'cartModal') renderCart();
+      if (id === 'libraryModal') renderLibraryAndOrders();
+      document.getElementById(id).classList.add('open');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    initSlider();
+    updateUserUI();
+    renderProducts();
+  </script>
+</body>
+</html>
