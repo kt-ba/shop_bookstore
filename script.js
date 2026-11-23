@@ -74,34 +74,6 @@ const PRODUCTS = [
     img: "./img/prod8.png",
     summary: "책장을 넘길 때마다 은은한 질감이 느껴지는 자수 책갈피 2종"
   }
-  {
-   id: 9,
-   name: "돈 뜨겁게 사랑하고 차갑게 다루어라",
-   category: "독서 굿즈",
-   price: 7200,
-   stock: 45,
-   img: "./img/prod9.png",
-   summary: "책장을 넘길 때마다 은은한 질감이 느껴지는 자수 책갈피 2종"
-  }
-  {
-   id: 10,
-   name: "AI 2027",
-   category: "독서 굿즈",
-   price: 7200,
-   stock: 45,
-   img: "./img/prod10.png",
-   summary: "책장을 넘길 때마다 은은한 질감이 느껴지는 자수 책갈피 2종"
-  }
-  {
-   id: 11,
-   name: "투자에 대한 생각",
-   category: "독서 굿즈",
-   price: 7200,
-   stock: 45,
-   img: "./img/prod11.png",
-   summary: "책장을 넘길 때마다 은은한 질감이 느껴지는 자수 책갈피 2종"
-  }
-
 ];
 
 const MEMBERSHIP_TIERS = [
