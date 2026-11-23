@@ -4,7 +4,7 @@
 const PRODUCTS = [
   {
     id: 1,
-    name: "가짜 돈 진짜 ",
+    name: "출근길 20분 에세이 모음집",
     category: "큐레이션 전자책",
     price: 9800,
     stock: 99,
@@ -13,7 +13,7 @@ const PRODUCTS = [
   },
   {
     id: 2,
-    name: "트렌드 코리아 2027",
+    name: "오늘의 완독 리딩패스",
     category: "오디오·리딩패스",
     price: 12900,
     stock: 50,
@@ -22,7 +22,7 @@ const PRODUCTS = [
   },
   {
     id: 3,
-    name: "박태웅의 AI 사",
+    name: "조용한 집중 오디오북 팩",
     category: "오디오·리딩패스",
     price: 14500,
     stock: 40,
@@ -31,7 +31,7 @@ const PRODUCTS = [
   },
   {
     id: 4,
-    name: "금융이 쉬워지는 최소한의 세계사",
+    name: "작은 습관이 만드는 하루",
     category: "단행본",
     price: 16800,
     stock: 25,
@@ -40,7 +40,7 @@ const PRODUCTS = [
   },
   {
     id: 5,
-    name: "팔란티어의 제",
+    name: "사색의 오후 인문 노트",
     category: "단행본",
     price: 18500,
     stock: 18,
@@ -49,7 +49,7 @@ const PRODUCTS = [
   },
   {
     id: 6,
-    name: "돈의 심리학",
+    name: "데이터로 읽는 비즈니스 트렌드",
     category: "큐레이션 전자책",
     price: 15000,
     stock: 80,
@@ -58,7 +58,7 @@ const PRODUCTS = [
   },
   {
     id: 7,
-    name: "나의 첫 부동산 교과서 ",
+    name: "버터 옐로우 독서 기록 노트",
     category: "독서 굿즈",
     price: 8500,
     stock: 35,
@@ -67,7 +67,7 @@ const PRODUCTS = [
   },
   {
     id: 8,
-    name: "돈 뜨겁게 사랑하고 차갑게 다루어라",
+    name: "베이지 패브릭 북마크 세트",
     category: "독서 굿즈",
     price: 7200,
     stock: 45,
