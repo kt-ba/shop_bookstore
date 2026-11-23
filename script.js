@@ -1,10 +1,10 @@
 /* ============================================================================
-   1. 상품 · 회원 등급 · 슬라이드 데이터 (DB 이관 및 수정 용이하도록 최상단 배치)
+   1. 상품 · 회원 등급 · 슬라이드 데이터
    ============================================================================ */
 const PRODUCTS = [
   {
     id: 1,
-    name: "가짜 돈 진짜 돈",
+    name: "출근길 20분 에세이 모음집",
     category: "큐레이션 전자책",
     price: 9800,
     stock: 99,
@@ -13,7 +13,7 @@ const PRODUCTS = [
   },
   {
     id: 2,
-    name: "트렌드 코리아 2027",
+    name: "오늘의 완독 리딩패스",
     category: "오디오·리딩패스",
     price: 12900,
     stock: 50,
@@ -22,7 +22,7 @@ const PRODUCTS = [
   },
   {
     id: 3,
-    name: "AI 사회",
+    name: "조용한 집중 오디오북 팩",
     category: "오디오·리딩패스",
     price: 14500,
     stock: 40,
@@ -31,7 +31,7 @@ const PRODUCTS = [
   },
   {
     id: 4,
-    name: "금융이 쉬워지는 최소한의 세계사",
+    name: "작은 습관이 만드는 하루",
     category: "단행본",
     price: 16800,
     stock: 25,
@@ -40,7 +40,7 @@ const PRODUCTS = [
   },
   {
     id: 5,
-    name: "팔란티어의 제왕",
+    name: "사색의 오후 인문 노트",
     category: "단행본",
     price: 18500,
     stock: 18,
@@ -49,7 +49,7 @@ const PRODUCTS = [
   },
   {
     id: 6,
-    name: "돈의 심리학",
+    name: "데이터로 읽는 비즈니스 트렌드",
     category: "큐레이션 전자책",
     price: 15000,
     stock: 80,
@@ -58,7 +58,7 @@ const PRODUCTS = [
   },
   {
     id: 7,
-    name: "나의 첫 부동산 교과서",
+    name: "버터 옐로우 독서 기록 노트",
     category: "독서 굿즈",
     price: 8500,
     stock: 35,
@@ -67,7 +67,7 @@ const PRODUCTS = [
   },
   {
     id: 8,
-    name: "돈, 뜨겁게 사랑하고 차갑게 다루어라",
+    name: "베이지 패브릭 북마크 세트",
     category: "독서 굿즈",
     price: 7200,
     stock: 45,
@@ -77,10 +77,10 @@ const PRODUCTS = [
 ];
 
 const MEMBERSHIP_TIERS = [
-  { level: 1, name: "새싹 독자", minSpent: 0, earnRate: 0.01, benefit: "신규 가입 3,000P 지급 · 구매액 1% 적립" },
-  { level: 2, name: "단골 독자", minSpent: 30000, earnRate: 0.03, benefit: "누적 3만원 이상 · 구매액 3% 적립" },
-  { level: 3, name: "큐레이터", minSpent: 70000, earnRate: 0.05, benefit: "누적 7만원 이상 · 구매액 5% 적립" },
-  { level: 4, name: "북마스터", minSpent: 120000, earnRate: 0.07, benefit: "누적 12만원 이상 · 구매액 7% 적립" }
+  { grade: "WELCOME", level: 1, name: "새싹 독자", minSpent: 0, earnRate: 0.01, benefit: "신규 가입 3,000P 지급 · 구매액 1% 적립" },
+  { grade: "SILVER", level: 2, name: "단골 독자", minSpent: 30000, earnRate: 0.03, benefit: "누적 3만원 이상 · 구매액 3% 적립" },
+  { grade: "GOLD", level: 3, name: "큐레이터", minSpent: 70000, earnRate: 0.05, benefit: "누적 7만원 이상 · 구매액 5% 적립" },
+  { grade: "VIP", level: 4, name: "북마스터", minSpent: 120000, earnRate: 0.07, benefit: "누적 12만원 이상 · 구매액 7% 적립" }
 ];
 
 const HERO_SLIDES = [
@@ -111,15 +111,12 @@ const HERO_SLIDES = [
 ];
 
 const CATEGORIES = ["전체", "큐레이션 전자책", "오디오·리딩패스", "단행본", "독서 굿즈"];
-const WELCOME_POINTS = 3000;
 const SLIDE_INTERVAL_MS = 6000;
 
 /* ============================================================================
-   2. 로컬 저장소 및 상태 관리
+   2. 로컬 저장소 헬퍼(회원 정보·비밀번호 미저장) 및 상태
    ============================================================================ */
 const STORAGE_KEYS = {
-  members: "sb_members_v1",
-  sessionEmail: "sb_session_email_v1",
   cart: "sb_cart_v1",
   orders: "sb_orders_v1"
 };
@@ -138,8 +135,8 @@ function saveJson(key, value) {
 }
 
 const state = {
-  members: loadJson(STORAGE_KEYS.members, []),
-  sessionEmail: loadJson(STORAGE_KEYS.sessionEmail, null),
+  sessionUser: null,
+  profile: null,
   cart: loadJson(STORAGE_KEYS.cart, []),
   orders: loadJson(STORAGE_KEYS.orders, []),
   selectedCategory: "전체",
@@ -158,14 +155,15 @@ function formatPoint(num) {
   return `${Number(num || 0).toLocaleString()}P`;
 }
 
-function getCurrentMember() {
-  if (!state.sessionEmail) return null;
-  return state.members.find((m) => m.email === state.sessionEmail) || null;
+function getTierByGrade(gradeCode = "WELCOME") {
+  const normalized = String(gradeCode || "WELCOME").toUpperCase();
+  return MEMBERSHIP_TIERS.find((t) => t.grade === normalized) || MEMBERSHIP_TIERS[0];
 }
 
-function getMemberTier(totalSpent = 0) {
-  const sorted = [...MEMBERSHIP_TIERS].sort((a, b) => b.minSpent - a.minSpent);
-  return sorted.find((tier) => totalSpent >= tier.minSpent) || MEMBERSHIP_TIERS[0];
+function getDisplayGradeLabel(gradeCode = "WELCOME") {
+  const normalized = String(gradeCode || "WELCOME").toUpperCase();
+  const tier = getTierByGrade(normalized);
+  return `${tier.name} (${normalized})`;
 }
 
 function getProductById(productId) {
@@ -183,7 +181,7 @@ function getRemainingStock(productId) {
 }
 
 /* ============================================================================
-   3. 알림 및 모달 제어
+   3. 토스트 · 모달 · 오류 메시지 한글 변환
    ============================================================================ */
 function showToast(message) {
   const toastEl = document.getElementById("toastBox");
@@ -192,7 +190,7 @@ function showToast(message) {
   clearTimeout(toastTimerId);
   toastTimerId = setTimeout(() => {
     toastEl.classList.remove("show");
-  }, 2500);
+  }, 2600);
 }
 
 function openModal(modalId) {
@@ -211,8 +209,108 @@ function closeAllModals() {
   });
 }
 
+function translateAuthError(error) {
+  if (!error) return "요청을 처리하는 중 오류가 발생했습니다.";
+  const msg = String(error.message || "").toLowerCase();
+
+  if (msg.includes("user already registered") || msg.includes("already been registered")) {
+    return "이미 가입된 이메일입니다. 로그인 탭에서 로그인해 주세요.";
+  }
+  if (msg.includes("invalid login credentials")) {
+    return "이메일 또는 비밀번호가 일치하지 않습니다.";
+  }
+  if (msg.includes("password should be at least") || msg.includes("weak password")) {
+    return "비밀번호는 6자 이상으로 입력해 주세요.";
+  }
+  if (msg.includes("unable to validate email") || msg.includes("invalid email")) {
+    return "올바른 이메일 주소를 입력해 주세요.";
+  }
+  if (msg.includes("email not confirmed")) {
+    return "이메일 인증이 완료되지 않았습니다. 메일함을 확인해 주세요.";
+  }
+  if (msg.includes("rate limit")) {
+    return "요청 횟수가 많습니다. 잠시 후 다시 시도해 주세요.";
+  }
+  return `오류가 발생했습니다: ${error.message}`;
+}
+
 /* ============================================================================
-   4. 슬라이드(4장, 6초 간격) 렌더링 및 제어
+   4. Supabase 세션 및 shop_profiles 동기화
+   ============================================================================ */
+async function fetchMyProfile(user) {
+  if (!user || typeof db === "undefined" || !db) {
+    state.profile = null;
+    return null;
+  }
+
+  const { data, error } = await db
+    .from("shop_profiles")
+    .select("id, email, name, phone, grade, points, role, created_at")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error("shop_profiles 조회 오류:", error.message);
+    state.profile = {
+      id: user.id,
+      email: user.email || "",
+      name: user.user_metadata?.name || (user.email ? user.email.split("@")[0] : "회원"),
+      phone: user.user_metadata?.phone || "",
+      grade: "WELCOME",
+      points: 3000,
+      role: "member"
+    };
+    return state.profile;
+  }
+
+  if (data) {
+    state.profile = data;
+    return data;
+  }
+
+  state.profile = {
+    id: user.id,
+    email: user.email || "",
+    name: user.user_metadata?.name || (user.email ? user.email.split("@")[0] : "회원"),
+    phone: user.user_metadata?.phone || "",
+    grade: "WELCOME",
+    points: 3000,
+    role: "member"
+  };
+  return state.profile;
+}
+
+async function checkSessionOnLoad() {
+  if (typeof db === "undefined" || !db) {
+    state.sessionUser = null;
+    state.profile = null;
+    refreshAllViews();
+    return;
+  }
+
+  const { data, error } = await db.auth.getSession();
+  if (error) {
+    console.error("세션 확인 오류:", error.message);
+    state.sessionUser = null;
+    state.profile = null;
+    refreshAllViews();
+    return;
+  }
+
+  const user = data?.session?.user || null;
+  state.sessionUser = user;
+
+  if (user) {
+    await fetchMyProfile(user);
+  } else {
+    state.profile = null;
+  }
+
+  refreshAllViews();
+}
+
+/* ============================================================================
+   5. 슬라이드 렌더링 및 제어
    ============================================================================ */
 function renderSlider() {
   const track = document.getElementById("slidesTrack");
@@ -258,28 +356,29 @@ function startSlideTimer() {
 }
 
 /* ============================================================================
-   5. 헤더 · 분류 필터 · 검색 · 상품 목록 · 상품 상세
+   6. 헤더 · 분류 필터 · 검색 · 상품 목록 · 상품 상세 · 등급 안내
    ============================================================================ */
 function renderHeaderAuth() {
   const area = document.getElementById("authHeaderArea");
-  const member = getCurrentMember();
   const cartTotalQty = state.cart.reduce((sum, item) => sum + item.qty, 0);
 
-  const authHtml = member
-    ? `
-      <span class="user-chip">
-        <span class="tier-pill">${getMemberTier(member.totalSpent).name}</span>
-        <span>${member.name}</span>
-        <span>${formatPoint(member.points)}</span>
-      </span>
-      <button type="button" class="btn btn-sm" id="logoutBtn">로그아웃</button>
-    `
-    : `<button type="button" class="btn btn-sm" id="openAuthBtn">로그인·가입</button>`;
+  if (state.sessionUser) {
+    const memberName = state.profile?.name
+      || state.sessionUser.user_metadata?.name
+      || state.sessionUser.email
+      || "회원";
 
-  area.innerHTML = `
-    ${authHtml}
-    <button type="button" class="btn btn-primary btn-sm" id="openCartBtn">장바구니 (${cartTotalQty})</button>
-  `;
+    area.innerHTML = `
+      <span class="user-chip">${memberName} 님</span>
+      <button type="button" class="btn btn-sm" id="logoutBtn">로그아웃</button>
+      <button type="button" class="btn btn-primary btn-sm" id="openCartBtn">장바구니 (${cartTotalQty})</button>
+    `;
+  } else {
+    area.innerHTML = `
+      <button type="button" class="btn btn-sm" id="openAuthBtn">로그인 · 회원가입</button>
+      <button type="button" class="btn btn-primary btn-sm" id="openCartBtn">장바구니 (${cartTotalQty})</button>
+    `;
+  }
 }
 
 function renderCategories() {
@@ -308,8 +407,7 @@ function getFilteredProducts() {
 function renderProducts() {
   const grid = document.getElementById("productGrid");
   const list = getFilteredProducts();
-  const member = getCurrentMember();
-  const earnRate = member ? getMemberTier(member.totalSpent).earnRate : MEMBERSHIP_TIERS[0].earnRate;
+  const earnRate = state.profile ? getTierByGrade(state.profile.grade).earnRate : MEMBERSHIP_TIERS[0].earnRate;
 
   if (list.length === 0) {
     grid.innerHTML = `<p class="empty-msg" style="grid-column:1/-1;">조건에 맞는 상품이 없습니다.</p>`;
@@ -349,8 +447,7 @@ function openProductDetail(productId) {
   if (!product) return;
 
   const remStock = getRemainingStock(product.id);
-  const member = getCurrentMember();
-  const earnRate = member ? getMemberTier(member.totalSpent).earnRate : MEMBERSHIP_TIERS[0].earnRate;
+  const earnRate = state.profile ? getTierByGrade(state.profile.grade).earnRate : MEMBERSHIP_TIERS[0].earnRate;
   const earnPts = Math.floor(product.price * earnRate);
 
   document.getElementById("detailTitle").textContent = product.name;
@@ -372,11 +469,10 @@ function openProductDetail(productId) {
 
 function renderMembershipTiers() {
   const grid = document.getElementById("tierGrid");
-  const member = getCurrentMember();
-  const currentTier = member ? getMemberTier(member.totalSpent) : null;
+  const currentTier = state.profile ? getTierByGrade(state.profile.grade) : null;
 
   grid.innerHTML = MEMBERSHIP_TIERS.map((tier) => {
-    const isCurrent = currentTier && currentTier.level === tier.level;
+    const isCurrent = currentTier && currentTier.grade === tier.grade;
     return `
       <div class="tier-card ${isCurrent ? "active-tier" : ""}">
         <div class="tier-top">
@@ -391,94 +487,141 @@ function renderMembershipTiers() {
 }
 
 /* ============================================================================
-   6. 회원가입 · 로그인 · 마이페이지
+   7. 회원가입 · 로그인 · 로그아웃 · 마이페이지 (Supabase Auth & shop_profiles)
    ============================================================================ */
 function switchAuthTab(mode) {
-  const isSignup = mode === "signup";
+  const isLogin = mode === "login";
   document.querySelectorAll(".auth-tab").forEach((tab) => {
     tab.classList.toggle("active", tab.dataset.authMode === mode);
   });
-  document.getElementById("signupForm").classList.toggle("hidden", !isSignup);
-  document.getElementById("loginForm").classList.toggle("hidden", isSignup);
+  document.getElementById("loginForm").classList.toggle("hidden", !isLogin);
+  document.getElementById("signupForm").classList.toggle("hidden", isLogin);
 }
 
-function handleSignup(e) {
+async function handleSignup(e) {
   e.preventDefault();
+  if (typeof db === "undefined" || !db) {
+    showToast("데이터베이스 연결을 확인해 주세요.");
+    return;
+  }
+
   const name = document.getElementById("signupName").value.trim();
-  const email = document.getElementById("signupEmail").value.trim().toLowerCase();
-  const pw = document.getElementById("signupPw").value;
+  const phone = document.getElementById("signupPhone").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPw").value;
 
-  if (!name || !email || pw.length < 4) {
-    showToast("이름, 이메일, 4자 이상 비밀번호를 입력하세요.");
+  if (!name) {
+    showToast("이름을 입력해 주세요.");
+    return;
+  }
+  if (!phone) {
+    showToast("연락처를 입력해 주세요.");
+    return;
+  }
+  if (password.length < 6) {
+    showToast("비밀번호는 6자 이상으로 입력해 주세요.");
     return;
   }
 
-  const exists = state.members.some((m) => m.email === email);
-  if (exists) {
-    showToast("이미 가입된 이메일입니다. 로그인해 주세요.");
-    switchAuthTab("login");
-    return;
-  }
-
-  const newMember = {
-    name,
+  const { data, error } = await db.auth.signUp({
     email,
-    pw,
-    points: WELCOME_POINTS,
-    totalSpent: 0
-  };
+    password,
+    options: {
+      data: {
+        name,
+        phone
+      }
+    }
+  });
 
-  state.members.push(newMember);
-  state.sessionEmail = email;
-  saveJson(STORAGE_KEYS.members, state.members);
-  saveJson(STORAGE_KEYS.sessionEmail, state.sessionEmail);
+  if (error) {
+    showToast(translateAuthError(error));
+    return;
+  }
 
   document.getElementById("signupForm").reset();
   closeModal("authModal");
-  refreshAllViews();
-  showToast(`${name}님 가입 완료! ${formatPoint(WELCOME_POINTS)}가 지급되었습니다.`);
+
+  if (data?.session?.user) {
+    state.sessionUser = data.session.user;
+    await fetchMyProfile(data.session.user);
+    refreshAllViews();
+    showToast(`${name}님 회원가입이 완료되었습니다.`);
+  } else {
+    showToast("회원가입이 완료되었습니다. 로그인해 주세요.");
+  }
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
-  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-  const pw = document.getElementById("loginPw").value;
-
-  const found = state.members.find((m) => m.email === email && m.pw === pw);
-  if (!found) {
-    showToast("이메일 또는 비밀번호가 일치하지 않습니다.");
+  if (typeof db === "undefined" || !db) {
+    showToast("데이터베이스 연결을 확인해 주세요.");
     return;
   }
 
-  state.sessionEmail = found.email;
-  saveJson(STORAGE_KEYS.sessionEmail, state.sessionEmail);
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPw").value;
+
+  if (!email || !password) {
+    showToast("이메일과 비밀번호를 입력해 주세요.");
+    return;
+  }
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    showToast(translateAuthError(error));
+    return;
+  }
+
   document.getElementById("loginForm").reset();
   closeModal("authModal");
+
+  state.sessionUser = data.user;
+  await fetchMyProfile(data.user);
   refreshAllViews();
-  showToast(`${found.name}님 환영합니다.`);
+  showToast(`${state.profile?.name || "회원"}님 환영합니다.`);
 }
 
-function handleLogout() {
-  state.sessionEmail = null;
-  saveJson(STORAGE_KEYS.sessionEmail, null);
-  refreshAllViews();
-  showToast("로그아웃 되었습니다.");
-}
+async function handleLogout() {
+  if (typeof db === "undefined" || !db) return;
 
-function renderMypage() {
-  const body = document.getElementById("mypageBody");
-  const member = getCurrentMember();
-
-  if (!member) {
-    body.innerHTML = `
-      <p class="empty-msg">로그인 후 회원 등급, 보유 포인트, 주문 내역을 확인할 수 있습니다.</p>
-      <button type="button" class="btn btn-primary btn-full" id="mypageLoginTrigger">회원가입 · 로그인 열기</button>
-    `;
+  const { error } = await db.auth.signOut();
+  if (error) {
+    showToast(translateAuthError(error));
     return;
   }
 
-  const tier = getMemberTier(member.totalSpent);
-  const myOrders = state.orders.filter((o) => o.memberEmail === member.email);
+  state.sessionUser = null;
+  state.profile = null;
+  closeAllModals();
+  refreshAllViews();
+  showToast("로그아웃되었습니다.");
+}
+
+async function openMypage() {
+  if (!state.sessionUser) {
+    switchAuthTab("login");
+    openModal("authModal");
+    showToast("로그인 후 마이페이지를 이용할 수 있습니다.");
+    return;
+  }
+
+  openModal("mypageModal");
+  const body = document.getElementById("mypageBody");
+  body.innerHTML = `<p class="empty-msg">내 프로필 정보를 불러오는 중입니다...</p>`;
+
+  const profile = await fetchMyProfile(state.sessionUser);
+  if (!profile) {
+    body.innerHTML = `<p class="empty-msg">회원 정보를 불러오지 못했습니다.</p>`;
+    return;
+  }
+
+  const tier = getTierByGrade(profile.grade);
+  const myOrders = state.orders.filter((o) => o.memberEmail === profile.email);
 
   const ordersHtml = myOrders.length === 0
     ? `<p class="empty-msg">아직 체험 결제 주문 내역이 없습니다.</p>`
@@ -492,19 +635,65 @@ function renderMypage() {
 
   body.innerHTML = `
     <div class="profile-box">
-      <div class="detail-row"><span>회원 이름</span><strong>${member.name}</strong></div>
-      <div class="detail-row"><span>이메일</span><strong>${member.email}</strong></div>
-      <div class="detail-row"><span>현재 등급</span><strong>${tier.level}단계 · ${tier.name} (${Math.round(tier.earnRate * 100)}% 적립)</strong></div>
-      <div class="detail-row"><span>보유 포인트</span><strong>${formatPoint(member.points)}</strong></div>
-      <div class="detail-row"><span>누적 결제 금액</span><strong>${formatWon(member.totalSpent)}</strong></div>
+      <div class="detail-row"><span>이름</span><strong>${profile.name || "-"}</strong></div>
+      <div class="detail-row"><span>이메일</span><strong>${profile.email || state.sessionUser.email || "-"}</strong></div>
+      <div class="detail-row"><span>등급</span><strong>${getDisplayGradeLabel(profile.grade)}</strong></div>
+      <div class="detail-row"><span>포인트</span><strong>${formatPoint(profile.points)}</strong></div>
     </div>
+
+    <form id="profileUpdateForm" class="profile-box">
+      <h3 style="font-size:1rem; margin-bottom:10px;">이름 · 연락처 수정</h3>
+      <div class="field">
+        <label for="editProfileName">이름</label>
+        <input type="text" id="editProfileName" value="${profile.name || ""}" required />
+      </div>
+      <div class="field">
+        <label for="editProfilePhone">연락처</label>
+        <input type="tel" id="editProfilePhone" value="${profile.phone || ""}" placeholder="010-0000-0000" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">저장하기</button>
+    </form>
+
     <h3 style="font-size:1rem; margin-bottom:10px;">체험 결제 주문 내역 (${myOrders.length}건)</h3>
     ${ordersHtml}
   `;
+
+  document.getElementById("profileUpdateForm").addEventListener("submit", handleProfileUpdate);
+}
+
+async function handleProfileUpdate(e) {
+  e.preventDefault();
+  if (typeof db === "undefined" || !db || !state.sessionUser) return;
+
+  const newName = document.getElementById("editProfileName").value.trim();
+  const newPhone = document.getElementById("editProfilePhone").value.trim();
+
+  if (!newName) {
+    showToast("이름을 입력해 주세요.");
+    return;
+  }
+
+  // grade, points, role 은 읽기 전용이므로 수정하지 않고 name 과 phone 만 갱신합니다.
+  const { data, error } = await db
+    .from("shop_profiles")
+    .update({ name: newName, phone: newPhone })
+    .eq("id", state.sessionUser.id)
+    .select("id, email, name, phone, grade, points, role, created_at")
+    .single();
+
+  if (error) {
+    showToast(`저장에 실패했습니다: ${error.message}`);
+    return;
+  }
+
+  state.profile = data;
+  refreshAllViews();
+  await openMypage();
+  showToast("이름과 연락처가 저장되었습니다.");
 }
 
 /* ============================================================================
-   7. 장바구니 (수량 변경 · 삭제 · 합계) 및 체험 결제
+   8. 장바구니 및 체험 결제
    ============================================================================ */
 function addToCart(productId) {
   const product = getProductById(productId);
@@ -559,8 +748,8 @@ function removeCartItem(productId) {
 }
 
 function computeCartTotals(requestedUsePoints = 0) {
-  const member = getCurrentMember();
-  const tier = member ? getMemberTier(member.totalSpent) : MEMBERSHIP_TIERS[0];
+  const profile = state.profile;
+  const tier = profile ? getTierByGrade(profile.grade) : MEMBERSHIP_TIERS[0];
 
   let subtotal = 0;
   const items = state.cart
@@ -580,14 +769,14 @@ function computeCartTotals(requestedUsePoints = 0) {
     })
     .filter(Boolean);
 
-  const maxAvailablePoints = member ? Math.max(0, member.points) : 0;
+  const maxAvailablePoints = profile ? Math.max(0, Number(profile.points) || 0) : 0;
   const cleanRequested = Math.max(0, Math.floor(Number(requestedUsePoints) || 0));
   const usedPoints = Math.min(cleanRequested, maxAvailablePoints, subtotal);
   const paidAmount = Math.max(0, subtotal - usedPoints);
-  const earnedPoints = member ? Math.floor(paidAmount * tier.earnRate) : 0;
+  const earnedPoints = profile ? Math.floor(paidAmount * tier.earnRate) : 0;
 
   return {
-    member,
+    profile,
     tier,
     items,
     subtotal,
@@ -664,11 +853,11 @@ function renderCart() {
 }
 
 function processTrialPayment() {
-  const member = getCurrentMember();
-  if (!member) {
+  if (!state.sessionUser || !state.profile) {
     closeModal("cartModal");
+    switchAuthTab("login");
     openModal("authModal");
-    showToast("체험 결제를 위해 먼저 로그인하거나 회원가입해 주세요.");
+    showToast("체험 결제를 위해 먼저 로그인해 주세요.");
     return;
   }
 
@@ -685,12 +874,9 @@ function processTrialPayment() {
     }
   }
 
-  member.points = Math.max(0, member.points - calc.usedPoints) + calc.earnedPoints;
-  member.totalSpent += calc.paidAmount;
-
   const order = {
     orderId: `SB-${Date.now().toString().slice(-6)}`,
-    memberEmail: member.email,
+    memberEmail: state.profile.email,
     date: new Date().toLocaleString("ko-KR"),
     items: calc.items,
     paidAmount: calc.paidAmount,
@@ -701,17 +887,16 @@ function processTrialPayment() {
   state.orders.unshift(order);
   state.cart = [];
 
-  saveJson(STORAGE_KEYS.members, state.members);
   saveJson(STORAGE_KEYS.orders, state.orders);
   saveJson(STORAGE_KEYS.cart, state.cart);
 
   closeModal("cartModal");
   refreshAllViews();
-  showToast(`체험 결제 완료! 주문번호 ${order.orderId} 저장 (+${formatPoint(calc.earnedPoints)} 적립)`);
+  showToast(`체험 결제 완료! 주문번호 ${order.orderId} (+${formatPoint(calc.earnedPoints)} 적립 예정)`);
 }
 
 /* ============================================================================
-   8. 전체 화면 갱신 및 이벤트 연결
+   9. 화면 갱신 및 이벤트 바인딩
    ============================================================================ */
 function refreshAllViews() {
   renderHeaderAuth();
@@ -778,7 +963,7 @@ function bindEvents() {
 
   document.addEventListener("click", (e) => {
     if (e.target.closest("#openAuthBtn")) {
-      switchAuthTab("signup");
+      switchAuthTab("login");
       openModal("authModal");
     }
     if (e.target.closest("#logoutBtn")) {
@@ -789,13 +974,7 @@ function bindEvents() {
       openModal("cartModal");
     }
     if (e.target.closest("#openMypageBtn")) {
-      renderMypage();
-      openModal("mypageModal");
-    }
-    if (e.target.closest("#mypageLoginTrigger")) {
-      closeModal("mypageModal");
-      switchAuthTab("signup");
-      openModal("authModal");
+      openMypage();
     }
 
     const closeBtn = e.target.closest("[data-close-modal]");
@@ -830,21 +1009,25 @@ function bindEvents() {
       removeCartItem(Number(removeBtn.dataset.removeId));
     }
   });
-
-  document.getElementById("mypageBody").addEventListener("click", (e) => {
-    if (e.target.closest("#mypageLoginTrigger")) {
-      closeModal("mypageModal");
-      switchAuthTab("signup");
-      openModal("authModal");
-    }
-  });
 }
 
-function init() {
+async function init() {
   renderSlider();
   startSlideTimer();
-  refreshAllViews();
   bindEvents();
+  await checkSessionOnLoad();
+
+  if (typeof db !== "undefined" && db) {
+    db.auth.onAuthStateChange(async (_event, session) => {
+      state.sessionUser = session?.user || null;
+      if (state.sessionUser) {
+        await fetchMyProfile(state.sessionUser);
+      } else {
+        state.profile = null;
+      }
+      refreshAllViews();
+    });
+  }
 }
 
 init();
