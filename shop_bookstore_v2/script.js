@@ -8,7 +8,7 @@ const PRODUCTS = [
     category: "큐레이션 전자책",
     price: 9800,
     stock: 99,
-    img: "./img/prod1.jpg",
+    img: "./img/prod1.png",
     summary: "지하철에서 가볍게 읽기 좋은 짧은 산문 28편을 모은 전자책"
   },
   {
@@ -17,7 +17,7 @@ const PRODUCTS = [
     category: "오디오·리딩패스",
     price: 12900,
     stock: 50,
-    img: "./img/prod2.jpg",
+    img: "./img/prod2.png",
     summary: "베스트셀러 요약 노트와 몰입형 리딩 가이드를 묶은 월간 패스"
   },
   {
@@ -26,7 +26,7 @@ const PRODUCTS = [
     category: "오디오·리딩패스",
     price: 14500,
     stock: 40,
-    img: "./img/prod3.jpg",
+    img: "./img/prod3.png",
     summary: "산책과 퇴근길에 듣기 좋은 차분한 낭독 오디오 컬렉션"
   },
   {
@@ -35,7 +35,7 @@ const PRODUCTS = [
     category: "단행본",
     price: 16800,
     stock: 25,
-    img: "./img/prod4.jpg",
+    img: "./img/prod4.png",
     summary: "대학생과 직장인의 루틴 정리를 돕는 실용 단행본"
   },
   {
@@ -44,7 +44,7 @@ const PRODUCTS = [
     category: "단행본",
     price: 18500,
     stock: 18,
-    img: "./img/prod5.jpg",
+    img: "./img/prod5.png",
     summary: "질문과 메모가 함께 담긴 미색 종이 인문 교양서"
   },
   {
@@ -53,7 +53,7 @@ const PRODUCTS = [
     category: "큐레이션 전자책",
     price: 15000,
     stock: 80,
-    img: "./img/prod6.jpg",
+    img: "./img/prod6.png",
     summary: "실무 사례와 표를 한눈에 보는 디지털 큐레이션북"
   },
   {
@@ -62,7 +62,7 @@ const PRODUCTS = [
     category: "독서 굿즈",
     price: 8500,
     stock: 35,
-    img: "./img/prod7.jpg",
+    img: "./img/prod7.png",
     summary: "읽은 문장과 감상을 남기는 손바닥 크기 독서 로그북"
   },
   {
@@ -71,7 +71,7 @@ const PRODUCTS = [
     category: "독서 굿즈",
     price: 7200,
     stock: 45,
-    img: "./img/prod8.jpg",
+    img: "./img/prod8.png",
     summary: "책장을 넘길 때마다 은은한 질감이 느껴지는 자수 책갈피 2종"
   }
 ];
