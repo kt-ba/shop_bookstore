@@ -74,6 +74,15 @@ const PRODUCTS = [
     img: "./img/prod8.png",
     summary: "책장을 넘길 때마다 은은한 질감이 느껴지는 자수 책갈피 2종"
   }
+  {
+    id: 9,
+    name: "AI 2027",
+    category: "단행본",
+    price: 7200,
+    stock: 45,
+    img: "./img/prod8.png",
+    summary: "책장을 넘길 때마다 은은한 질감이 느껴지는 자수 책갈피 2종"
+  }
 ];
 
 const MEMBERSHIP_TIERS = [
